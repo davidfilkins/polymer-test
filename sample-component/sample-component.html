@@ -1,0 +1,115 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../bower_components/adpc-styles/shared-styles.html">
+<link rel="import" href="../global-settings/global-settings.html">
+<link rel="import" href="../jquery-plugin/jquery-plugin.html">
+
+<dom-module id="sample-component">
+  <template>
+    <global-settings></global-settings>
+    <style include='vdl-styles'></style>
+
+    <div>
+      <h2>My Title: [[title]]</h2>
+      <p>
+        This paragraph is inside my component.
+      </p>
+
+      <!-- https://www.polymer-project.org/2.0/docs/devguide/data-binding#two-way-native -->
+      <input type="text" value="{{inputValue::input}}" />
+
+      <!-- https://www.polymer-project.org/2.0/docs/devguide/events#annotated-listeners -->
+      <button class='vdl-button vdl-button--primary' on-click='handleClick'>Handle Click</button>
+      <button class='vdl-button vdl-button--secondary' on-click='raiseClickEvent'>Raise Click</button>
+    </div>
+
+    <!-- https://www.polymer-project.org/2.0/docs/devguide/templates#dom-repeat -->
+    <template is="dom-repeat" items={{items}}>
+      <div>
+        <h3>[[item.Name]]</h3>
+        <p>[[item.Description]]</p>
+      </div>
+    </template>
+
+  </template>
+
+  <script>
+    class SampleComponent extends Polymer.Element {
+      static get is() { return 'sample-component'; }
+      static get properties() {
+        return {
+          title: {
+            type: String,
+            value: 'Sample Title'
+          },
+          items: {
+            type: Array,
+            value: []
+          },
+          inputValue: {
+            type: String,
+            value: "My Input Value",
+            reflectToAttribute: true,
+            notify: true // https://www.polymer-project.org/2.0/docs/devguide/data-system#change-events
+          }
+        };
+      };
+      connectedCallback() {
+
+        super.connectedCallback();
+        let _this = this;
+
+        // get the global-settings component as an element
+        var globals = this.shadowRoot.querySelector('global-settings');
+
+        // now we can access any of the properties
+        var baseapi = globals.baseapi;
+
+        jQuery.ajax({
+          url: baseapi + "data.json",
+          contentType: "application/json; charset=utf-8",
+          type: "GET",
+          dataType: "json",
+          success(result, status, xhr) {
+            _this.handleResponse(result);
+            
+          },
+          error(xhr, status, error) {
+            _this.handleError(error);
+          }
+        });
+        
+      }
+      handleResponse(response) {
+        this.items = response;
+        this.raiseDataRetrievedEvent();
+      }
+      handleError(err) {
+        this.dispatchEvent(
+          new CustomEvent('sample-component-error', {
+            detail: { data: err }
+          }));
+      }
+      handleClick(e) {
+        alert('Handle Click Button Clicked - in Sample Web Component');
+        console.log('Handle Click Button Clicked - in Sample Web Component');
+      }
+      raiseClickEvent(e) {
+        this.dispatchEvent(
+          new CustomEvent('sample-component-click', {
+            detail: { button: 'Raise Click' }
+          }));
+      }
+      raiseDataRetrievedEvent() {
+        this.dispatchEvent(
+          new CustomEvent('sample-component-data-retrieved', {
+            bubbles: true,
+            composed: true,
+            detail: { data: "loading complete" }
+          }));
+      }
+    }
+
+    window.customElements.define(SampleComponent.is, SampleComponent);
+  </script>
+</dom-module>

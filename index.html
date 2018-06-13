@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>sample-element demo</title>
+
+  <script src="/common/bower_components/webcomponentsjs/webcomponents-loader.js"></script>
+
+  <link rel="import" href="sample-component/sample-component.html">
+</head>
+
+<body>
+  <sample-component on-sample-component-data-retrieved="DataRetrieved" title="Title from host...">
+  </sample-component>
+</body>
+<script>
+  // Listen to Custom event from Sample Component
+  document.querySelector('sample-component').addEventListener('sample-component-data-retrieved', function (e) {
+    alert('Event received in Index.html ' + e.detail);
+    console.log(e.detail);
+  });
+
+  // Listen to Custom event from Sample Component
+  document.querySelector('sample-component').addEventListener('sample-component-click', function (e) {
+    alert(e.detail.button + " Clicked - in Index.html");
+    console.log(e.detail.button + " Clicked - in Index.html");
+  });
+
+  // Listen to Property Notify event from Sample Component
+  document.querySelector('sample-component').addEventListener('input-value-changed', function (e) {
+    console.log('Sample Component Input Value Changed: ' + e.detail.value);
+  });
+</script>
+
+</html>

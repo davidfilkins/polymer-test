@@ -1,0 +1,19 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+  <dom-module id="global-settings">
+  
+    <script>
+        class GlobalSettings extends Polymer.Element {
+            static get is() { return 'global-settings'; }
+            static get properties() {
+                return {
+                    baseapi: { type: String, value: '/' }
+                };
+            }
+        }
+       window.customElements.define(
+            GlobalSettings.is, GlobalSettings
+        );
+    </script>
+
+  </dom-module>

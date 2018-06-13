@@ -1,0 +1,17 @@
+{
+  "name": "sample-element",
+  "description": "Sample Element",
+  "main": "sample-element.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^2.0.0",
+    "iron-ajax": "^2.1.3",
+    "adpc-styles": "*"
+  },
+  "devDependencies": {
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
+  },
+  "resolutions": {
+    "polymer": "^2.0.0"
+  }
+}
